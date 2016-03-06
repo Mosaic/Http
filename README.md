@@ -1,6 +1,6 @@
 # Mosaic
 
-## Config component
+## Http component
 
 Mosaic is a collection of component interfaces which allow the end user complete control over which components to use and which implementations.
 
