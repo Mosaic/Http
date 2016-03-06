@@ -3,13 +3,10 @@
 namespace Mosaic\Http;
 
 use Mosaic\Contracts\Application;
-use Mosaic\Exceptions\Formatters\SmartFormatter;
-use Mosaic\Exceptions\Handlers\LogHandler;
 use Mosaic\Http\Emitters\SapiEmitter;
 use Mosaic\Http\Middleware\DispatchRequest;
 use Mosaic\Http\Middleware\Stack;
 use Mosaic\Http\Server as ServerContract;
-use Throwable;
 
 class WebServer implements ServerContract
 {
@@ -23,18 +20,6 @@ class WebServer implements ServerContract
      */
     protected $middleware = [
         DispatchRequest::class,
-    ];
-
-    /**
-     * @var string
-     */
-    protected $exceptionFormatter = SmartFormatter::class;
-
-    /**
-     * @var array
-     */
-    protected $exceptionHandlers = [
-        LogHandler::class
     ];
 
     /**

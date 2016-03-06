@@ -3,7 +3,7 @@
 namespace Mosaic\Http\Definitions;
 
 use Interop\Container\Definition\DefinitionProviderInterface;
-use Mosaic\Foundation\Components\Definition;
+use Mosaic\Cement\Components\Definition;
 use Mosaic\Http\Adapters\Psr7\Request;
 use Mosaic\Http\Adapters\Psr7\Response;
 use Mosaic\Http\Adapters\Psr7\ResponseFactory;
