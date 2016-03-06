@@ -1,6 +1,6 @@
 <?php
 
-namespace Mosaic\Exceptions;
+namespace Mosaic\Http\Exceptions;
 
 use Exception;
 use Throwable;

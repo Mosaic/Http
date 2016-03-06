@@ -5,7 +5,7 @@ namespace Mosaic\Http;
 use Mosaic\Contracts\Application;
 use Mosaic\Exceptions\Formatters\SmartFormatter;
 use Mosaic\Exceptions\Handlers\LogHandler;
-use Mosaic\Exceptions\Runner;
+use Mosaic\Http\Emitters\SapiEmitter;
 use Mosaic\Http\Middleware\DispatchRequest;
 use Mosaic\Http\Middleware\Stack;
 use Mosaic\Http\Server as ServerContract;
@@ -69,24 +69,11 @@ class WebServer implements ServerContract
      */
     public function listen(callable $terminate = null)
     {
-        $this->app->setExceptionRunner(
-            new Runner(
-                $this->app,
-                $this->getEmitter(),
-                $this->getExceptionHandlers(),
-                $this->getExceptionFormatter()
-            )
-        );
-
         $this->app->setContext($this->getName());
 
         $this->app->bootstrap();
 
-        try {
-            $this->handle($terminate);
-        } catch (Throwable $e) {
-            $this->app->getExceptionRunner()->handleException($e);
-        }
+        $this->handle($terminate);
     }
 
     /**
@@ -101,7 +88,7 @@ class WebServer implements ServerContract
         $bufferLevel = ob_get_level();
 
         // Run the request through the stack of middleware
-        $response = (new Stack($this->app))->run($request)->through(
+        $response = (new Stack($this->app->getContainer()))->run($request)->through(
             $this->middleware()
         );
 

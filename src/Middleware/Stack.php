@@ -2,7 +2,7 @@
 
 namespace Mosaic\Http\Middleware;
 
-use Mosaic\Container;
+use Mosaic\Container\Container;
 use Mosaic\Http\Request;
 use Mosaic\Http\Response;
 

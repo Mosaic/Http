@@ -2,11 +2,10 @@
 
 namespace Mosaic\Http\Middleware;
 
-use Mosaic\Contracts\Http\Request;
-use Mosaic\Contracts\Http\ResponseFactory;
-use Mosaic\Contracts\Routing\RouteDispatcher;
-use Mosaic\Contracts\Routing\Router;
-use Mosaic\Contracts\View\Factory;
+use Mosaic\Http\Request;
+use Mosaic\Http\ResponseFactory;
+use Mosaic\Routing\RouteDispatcher;
+use Mosaic\Routing\Router;
 use Mosaic\Http\Adapters\Psr7\Response;
 use Mosaic\Routing\Dispatchers\DispatchClosure;
 use Mosaic\Routing\Dispatchers\DispatchController;
