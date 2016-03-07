@@ -6,8 +6,8 @@ use Mosaic\Http\Adapters\Psr7\Response;
 use Mosaic\Http\Adapters\Psr7\ResponseFactory;
 use Mosaic\Http\Response as ResponseContract;
 use Mosaic\Http\ResponseFactory as ResponseFactoryContract;
-use Mosaic\Support\ArrayObject;
-use Mosaic\Support\HtmlString;
+use Mosaic\Common\ArrayObject;
+use Mosaic\Common\HtmlString;
 
 class Psr7ResponseFactoryTest extends \PHPUnit_Framework_TestCase
 {

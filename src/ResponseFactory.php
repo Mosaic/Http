@@ -2,7 +2,7 @@
 
 namespace Mosaic\Http;
 
-use Mosaic\Support\Arrayable;
+use Mosaic\Common\Arrayable;
 
 interface ResponseFactory
 {

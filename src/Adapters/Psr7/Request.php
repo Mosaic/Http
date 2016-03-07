@@ -3,7 +3,7 @@
 namespace Mosaic\Http\Adapters\Psr7;
 
 use Mosaic\Http\Request as RequestContract;
-use Mosaic\Support\Arr;
+use Mosaic\Common\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
