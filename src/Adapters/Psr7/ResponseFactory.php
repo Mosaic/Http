@@ -2,9 +2,9 @@
 
 namespace Mosaic\Http\Adapters\Psr7;
 
+use Mosaic\Common\Arrayable;
 use Mosaic\Http\Response as ResponseContract;
 use Mosaic\Http\ResponseFactory as ResponseFactoryContract;
-use Mosaic\Common\Arrayable;
 use Zend\Diactoros\Response\EmptyResponse;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\JsonResponse;

@@ -5,7 +5,7 @@ namespace Mosaic\Http\Adapters\Psr7;
 use Mosaic\Http\Response as ResponseContract;
 use Psr\Http\Message\ResponseInterface;
 
-class Response implements ResponseContract
+class Response extends Message implements ResponseContract, ResponseInterface
 {
     /**
      * @var ServerRequestInterface
@@ -51,24 +51,14 @@ class Response implements ResponseContract
     }
 
     /**
-     * @param string $string
-     * @param string $param
+     * @param string $header
+     * @param string $value
      *
-     * @return static
+     * @return ResponseContract
      */
     public function addHeader(string $header, string $value) : ResponseContract
     {
         return new static($this->wrapped->withHeader($header, $value));
-    }
-
-    /**
-     * @param string $string
-     *
-     * @return bool
-     */
-    public function hasHeader(string $header) : bool
-    {
-        return $this->wrapped->hasHeader($header);
     }
 
     /**
@@ -93,5 +83,37 @@ class Response implements ResponseContract
     public function headers() : array
     {
         return $this->wrapped->getHeaders();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getStatusCode()
+    {
+        return $this->wrapped->getStatusCode();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function withStatus($code, $reasonPhrase = '')
+    {
+        return new static($this->wrapped->withStatus($code, $reasonPhrase));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getReasonPhrase()
+    {
+        return $this->wrapped->getReasonPhrase();
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function toPsr7() : ResponseInterface
+    {
+        return $this;
     }
 }

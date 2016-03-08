@@ -4,7 +4,6 @@ namespace Mosaic\Http\Tests\Adapters\Psr7;
 
 use Mosaic\Http\Adapters\Psr7\Request;
 use Mosaic\Http\Request as RequestContract;
-use Mosaic\Tests\ClosesMockeryOnTearDown;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;

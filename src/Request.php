@@ -2,8 +2,15 @@
 
 namespace Mosaic\Http;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 interface Request
 {
+    /**
+     * @return ServerRequestInterface
+     */
+    public function toPsr7() : ServerRequestInterface;
+
     /**
      * Retrieve a header from the request.
      *

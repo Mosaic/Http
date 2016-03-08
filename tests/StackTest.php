@@ -8,7 +8,6 @@ use Mosaic\Contracts\Container\Container;
 use Mosaic\Contracts\Http\Request;
 use Mosaic\Http\Adapters\Psr7\ResponseFactory;
 use Mosaic\Http\Stack;
-use Mosaic\Tests\ClosesMockeryOnTearDown;
 
 class StackTest extends \PHPUnit_Framework_TestCase
 {

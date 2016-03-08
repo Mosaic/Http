@@ -2,13 +2,12 @@
 
 namespace Mosaic\Http\Adapters\Psr7;
 
-use Mosaic\Http\Request as RequestContract;
 use Mosaic\Common\Arr;
+use Mosaic\Http\Request as RequestContract;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
-class Request implements RequestContract, ServerRequestInterface
+class Request extends Message implements RequestContract, ServerRequestInterface
 {
     /**
      * @var ServerRequestInterface
@@ -68,7 +67,7 @@ class Request implements RequestContract, ServerRequestInterface
     {
         $params = [];
 
-        foreach ((array)$keys as $key) {
+        foreach ((array) $keys as $key) {
             $params[$key] = $this->get($key);
         }
 
@@ -82,7 +81,7 @@ class Request implements RequestContract, ServerRequestInterface
     {
         $allKeys = array_keys($this->all());
 
-        return $this->only(array_diff($allKeys, (array)$keys));
+        return $this->only(array_diff($allKeys, (array) $keys));
     }
 
     /**
@@ -90,7 +89,7 @@ class Request implements RequestContract, ServerRequestInterface
      */
     public function exists($key)
     {
-        return array_reduce((array)$key, function ($carry, $item) use ($key) {
+        return array_reduce((array) $key, function ($carry, $item) use ($key) {
             return $carry && array_key_exists($item, $this->all());
         }, true);
     }
@@ -100,7 +99,7 @@ class Request implements RequestContract, ServerRequestInterface
      */
     public function has($key)
     {
-        return array_reduce((array)$key, function ($carry, $item) use ($key) {
+        return array_reduce((array) $key, function ($carry, $item) use ($key) {
             return $carry && !$this->isEmptyString($item);
         }, true);
     }
@@ -215,94 +214,6 @@ class Request implements RequestContract, ServerRequestInterface
     public function withUri(UriInterface $uri, $preserveHost = false)
     {
         return new static($this->wrapped->withUri($uri, $preserveHost));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getProtocolVersion()
-    {
-        return $this->wrapped->getProtocolVersion();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withProtocolVersion($version)
-    {
-        return new static($this->wrapped->withProtocolVersion($version));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getHeaders()
-    {
-        return $this->wrapped->getHeaders();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasHeader($name)
-    {
-        return $this->wrapped->hasHeader($name);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getHeader($name)
-    {
-        return $this->wrapped->getHeader($name);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getHeaderLine($name)
-    {
-        return $this->wrapped->getHeaderLine($name);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withHeader($name, $value)
-    {
-        return new static($this->wrapped->withHeader($name, $value));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withAddedHeader($name, $value)
-    {
-        return new static($this->wrapped->withAddedHeader($name, $value));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withoutHeader($name)
-    {
-        return new static($this->wrapped->withoutHeader($name));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBody()
-    {
-        return $this->wrapped->getBody();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function withBody(StreamInterface $body)
-    {
-        return new static($this->wrapped->withBody($body));
     }
 
     /**
@@ -440,7 +351,7 @@ class Request implements RequestContract, ServerRequestInterface
      */
     public function uri() : string
     {
-        return (string)$this->wrapped->getUri();
+        return (string) $this->wrapped->getUri();
     }
 
     /**
@@ -448,6 +359,14 @@ class Request implements RequestContract, ServerRequestInterface
      */
     public function path() : string
     {
-        return (string)$this->wrapped->getUri()->getPath();
+        return (string) $this->wrapped->getUri()->getPath();
+    }
+
+    /**
+     * @return ServerRequestInterface
+     */
+    public function toPsr7() : ServerRequestInterface
+    {
+        return $this;
     }
 }

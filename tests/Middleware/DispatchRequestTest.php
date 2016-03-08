@@ -13,7 +13,6 @@ use Mosaic\Routing\Route;
 use Mosaic\Routing\RouteCollection;
 use Mosaic\Routing\RouteDispatcher;
 use Mosaic\Routing\Router;
-use Mosaic\Tests\ClosesMockeryOnTearDown;
 use PHPUnit_Framework_TestCase;
 
 class DispatchRequestTest extends PHPUnit_Framework_TestCase

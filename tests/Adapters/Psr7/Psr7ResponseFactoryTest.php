@@ -2,12 +2,12 @@
 
 namespace Mosaic\Http\Tests\Adapters\Psr7;
 
+use Mosaic\Common\ArrayObject;
+use Mosaic\Common\HtmlString;
 use Mosaic\Http\Adapters\Psr7\Response;
 use Mosaic\Http\Adapters\Psr7\ResponseFactory;
 use Mosaic\Http\Response as ResponseContract;
 use Mosaic\Http\ResponseFactory as ResponseFactoryContract;
-use Mosaic\Common\ArrayObject;
-use Mosaic\Common\HtmlString;
 
 class Psr7ResponseFactoryTest extends \PHPUnit_Framework_TestCase
 {
