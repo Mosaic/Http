@@ -2,7 +2,7 @@
 
 namespace Mosaic\Http;
 
-use Mosaic\Contracts\Application;
+use Mosaic\Container\Container;
 use Mosaic\Http\Emitters\SapiEmitter;
 use Mosaic\Http\Middleware\DispatchRequest;
 use Mosaic\Http\Middleware\Stack;
@@ -10,11 +10,6 @@ use Mosaic\Http\Server as ServerContract;
 
 class WebServer implements ServerContract
 {
-    /**
-     * @var Application
-     */
-    protected $app;
-
     /**
      * @var array
      */
@@ -28,15 +23,25 @@ class WebServer implements ServerContract
     protected $emitter;
 
     /**
-     * Server constructor.
-     *
-     * @param Application $app
-     * @param Emitter     $emitter
+     * @var Request
      */
-    public function __construct(Application $app, Emitter $emitter = null)
+    protected $request;
+
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * @param Request   $request
+     * @param Container $container
+     * @param Emitter   $emitter
+     */
+    public function __construct(Request $request, Container $container, Emitter $emitter = null)
     {
-        $this->app     = $app;
-        $this->emitter = $emitter ?: new SapiEmitter;
+        $this->emitter   = $emitter ?: new SapiEmitter;
+        $this->request   = $request;
+        $this->container = $container;
     }
 
     /**
@@ -54,10 +59,6 @@ class WebServer implements ServerContract
      */
     public function listen(callable $terminate = null)
     {
-        $this->app->setContext($this->getName());
-
-        $this->app->bootstrap();
-
         $this->handle($terminate);
     }
 
@@ -66,14 +67,13 @@ class WebServer implements ServerContract
      */
     protected function handle(callable $terminate = null)
     {
-        // Capture the request
-        $request = $this->request();
+        $request = $this->request;
 
         ob_start();
         $bufferLevel = ob_get_level();
 
         // Run the request through the stack of middleware
-        $response = (new Stack($this->app->getContainer()))->run($request)->through(
+        $response = (new Stack($this->container))->run($request)->through(
             $this->middleware()
         );
 
@@ -82,16 +82,7 @@ class WebServer implements ServerContract
             $terminate($request, $response);
         }
 
-        // Emit the response
         $this->getEmitter()->emit($response, $bufferLevel);
-    }
-
-    /**
-     * @return Request
-     */
-    protected function request() : Request
-    {
-        return $this->app->getContainer()->make(Request::class);
     }
 
     /**
@@ -108,21 +99,5 @@ class WebServer implements ServerContract
     protected function getEmitter() : Emitter
     {
         return $this->emitter;
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getExceptionFormatter()
-    {
-        return $this->exceptionFormatter;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getExceptionHandlers()
-    {
-        return $this->exceptionHandlers;
     }
 }
