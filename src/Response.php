@@ -45,7 +45,7 @@ interface Response
      *
      * @return bool
      */
-    public function hasHeader(string $header);
+    public function hasHeader($name);
 
     /**
      * @return string

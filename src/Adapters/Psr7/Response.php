@@ -10,7 +10,7 @@ class Response extends Message implements ResponseContract, ResponseInterface
     /**
      * @var ServerRequestInterface
      */
-    private $wrapped;
+    protected $wrapped;
 
     /**
      * @param ResponseInterface $wrapper
