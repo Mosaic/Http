@@ -3,7 +3,7 @@
 namespace Mosaic\Http\Tests\Definitions;
 
 use Interop\Container\Definition\DefinitionProviderInterface;
-use Mosaic\Http\Definitions\DiactorosDefinition;
+use Mosaic\Http\Providers\DiactorosProvider;
 use Mosaic\Http\Request;
 use Mosaic\Http\Response;
 use Mosaic\Http\ResponseFactory;
@@ -12,7 +12,7 @@ class DiactorosDefinitionTest extends \PHPUnit_Framework_TestCase
 {
     public function getDefinition() : DefinitionProviderInterface
     {
-        return new DiactorosDefinition();
+        return new DiactorosProvider();
     }
 
     public function shouldDefine() : array

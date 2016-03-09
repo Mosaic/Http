@@ -1,6 +1,6 @@
 <?php
 
-namespace Mosaic\Http\Definitions;
+namespace Mosaic\Http\Providers;
 
 use Interop\Container\Definition\DefinitionProviderInterface;
 use Mosaic\Cement\Components\Definition;
@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface as Psr7Request;
 use Zend\Diactoros\Response as DiactorosResponse;
 use Zend\Diactoros\ServerRequestFactory;
 
-class DiactorosDefinition implements DefinitionProviderInterface
+class DiactorosProvider implements DefinitionProviderInterface
 {
     /**
      * @return array|Definition[]

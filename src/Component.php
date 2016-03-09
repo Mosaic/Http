@@ -3,7 +3,7 @@
 namespace Mosaic\Http;
 
 use Mosaic\Common\Components\AbstractComponent;
-use Mosaic\Http\Definitions\DiactorosDefinition;
+use Mosaic\Http\Providers\DiactorosProvider;
 
 /**
  * @method static $this diactoros()
@@ -16,7 +16,7 @@ final class Component extends AbstractComponent
     public function resolveDiactoros()
     {
         return [
-            new DiactorosDefinition()
+            new DiactorosProvider()
         ];
     }
 
