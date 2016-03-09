@@ -2,10 +2,7 @@
 
 namespace Mosaic\Http;
 
-use Mosaic\Container\Container;
 use Mosaic\Http\Emitters\SapiEmitter;
-use Mosaic\Http\Middleware\DispatchRequest;
-use Mosaic\Http\Middleware\Stack;
 use Mosaic\Http\Server as ServerContract;
 
 class WebServer implements ServerContract
@@ -13,9 +10,7 @@ class WebServer implements ServerContract
     /**
      * @var array
      */
-    protected $middleware = [
-        DispatchRequest::class,
-    ];
+    protected $pipes = [];
 
     /**
      * @var Emitter
@@ -23,61 +18,28 @@ class WebServer implements ServerContract
     protected $emitter;
 
     /**
-     * @var Request
+     * @param Emitter $emitter
      */
-    protected $request;
-
-    /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * @param Request   $request
-     * @param Container $container
-     * @param Emitter   $emitter
-     */
-    public function __construct(Request $request, Container $container, Emitter $emitter = null)
+    public function __construct(Emitter $emitter = null)
     {
-        $this->emitter   = $emitter ?: new SapiEmitter;
-        $this->request   = $request;
-        $this->container = $container;
+        $this->emitter = $emitter ?: new SapiEmitter;
     }
 
     /**
-     * @return string
+     * @param Request       $request
+     * @param callable|null $terminate
      */
-    public function getName() : string
+    public function serve(Request $request, callable $terminate = null)
     {
-        return 'web';
-    }
-
-    /**
-     * Listen to a server request
-     *
-     * @param callable $terminate
-     */
-    public function listen(callable $terminate = null)
-    {
-        $this->handle($terminate);
-    }
-
-    /**
-     * @param callable $terminate
-     */
-    protected function handle(callable $terminate = null)
-    {
-        $request = $this->request;
-
         ob_start();
         $bufferLevel = ob_get_level();
 
-        // Run the request through the stack of middleware
-        $response = (new Stack($this->container))->run($request)->through(
-            $this->middleware()
-        );
+        $response = array_reduce(array_reverse($this->pipes), function ($next, $pipe) use ($request) {
+            return $pipe($request, function () use ($next) {
+                return $next;
+            });
+        });
 
-        // Call the terminate closure when given
         if (is_callable($terminate)) {
             $terminate($request, $response);
         }
@@ -86,11 +48,14 @@ class WebServer implements ServerContract
     }
 
     /**
-     * @return array
+     * @param array ...$pipes
+     * @return Server
      */
-    protected function middleware() : array
+    public function pipe(...$pipes)
     {
-        return $this->middleware;
+        $this->pipes = $pipes;
+
+        return $this;
     }
 
     /**

@@ -5,14 +5,14 @@ namespace Mosaic\Http;
 interface Server
 {
     /**
-     * Listen to a server request
-     *
-     * @param callable $terminate
+     * @param array ...$pipes
+     * @return Server
      */
-    public function listen(callable $terminate = null);
+    public function pipe(...$pipes);
 
     /**
-     * @return string
+     * @param Request       $request
+     * @param callable|null $terminate
      */
-    public function getName() : string;
+    public function serve(Request $request, callable $terminate = null);
 }
