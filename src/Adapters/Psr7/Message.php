@@ -5,14 +5,14 @@ namespace Mosaic\Http\Adapters\Psr7;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 
-class Message implements MessageInterface
+abstract class Message implements MessageInterface
 {
     /**
      * {@inheritdoc}
      */
     public function getProtocolVersion()
     {
-        return $this->wrapped->getProtocolVersion();
+        return $this->getWrapped()->getProtocolVersion();
     }
 
     /**
@@ -20,7 +20,7 @@ class Message implements MessageInterface
      */
     public function withProtocolVersion($version)
     {
-        return new static($this->wrapped->withProtocolVersion($version));
+        return new static($this->getWrapped()->withProtocolVersion($version));
     }
 
     /**
@@ -28,7 +28,7 @@ class Message implements MessageInterface
      */
     public function getHeaders()
     {
-        return $this->wrapped->getHeaders();
+        return $this->getWrapped()->getHeaders();
     }
 
     /**
@@ -36,7 +36,7 @@ class Message implements MessageInterface
      */
     public function hasHeader($name)
     {
-        return $this->wrapped->hasHeader($name);
+        return $this->getWrapped()->hasHeader($name);
     }
 
     /**
@@ -44,7 +44,7 @@ class Message implements MessageInterface
      */
     public function getHeader($name)
     {
-        return $this->wrapped->getHeader($name);
+        return $this->getWrapped()->getHeader($name);
     }
 
     /**
@@ -52,7 +52,7 @@ class Message implements MessageInterface
      */
     public function getHeaderLine($name)
     {
-        return $this->wrapped->getHeaderLine($name);
+        return $this->getWrapped()->getHeaderLine($name);
     }
 
     /**
@@ -60,7 +60,7 @@ class Message implements MessageInterface
      */
     public function withHeader($name, $value)
     {
-        return new static($this->wrapped->withHeader($name, $value));
+        return new static($this->getWrapped()->withHeader($name, $value));
     }
 
     /**
@@ -68,7 +68,7 @@ class Message implements MessageInterface
      */
     public function withAddedHeader($name, $value)
     {
-        return new static($this->wrapped->withAddedHeader($name, $value));
+        return new static($this->getWrapped()->withAddedHeader($name, $value));
     }
 
     /**
@@ -76,7 +76,7 @@ class Message implements MessageInterface
      */
     public function withoutHeader($name)
     {
-        return new static($this->wrapped->withoutHeader($name));
+        return new static($this->getWrapped()->withoutHeader($name));
     }
 
     /**
@@ -84,7 +84,7 @@ class Message implements MessageInterface
      */
     public function getBody()
     {
-        return $this->wrapped->getBody();
+        return $this->getWrapped()->getBody();
     }
 
     /**
@@ -92,6 +92,11 @@ class Message implements MessageInterface
      */
     public function withBody(StreamInterface $body)
     {
-        return new static($this->wrapped->withBody($body));
+        return new static($this->getWrapped()->withBody($body));
     }
+
+    /**
+     * @return mixed
+     */
+    abstract protected function getWrapped();
 }

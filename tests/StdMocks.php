@@ -35,7 +35,7 @@ namespace Mosaic\Http\Tests {
 
 namespace Mosaic\Http {
 
-    use Mosaic\Tests\StdMocks;
+    use Mosaic\Http\Tests\StdMocks;
 
     function headers_sent()
     {

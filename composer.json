@@ -19,6 +19,7 @@
   "require": {
     "php": ">=7.0.0",
     "psr/http-message": "^1.0",
+    "mosaic/common": "dev-master",
     "container-interop/definition-interop": "~0.2.0"
   },
   "require-dev": {
@@ -38,5 +39,11 @@
     "psr-4": {
       "Mosaic\\Http\\Tests\\": "tests/"
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:Mosaic/Common.git"
+    }
+  ]
 }

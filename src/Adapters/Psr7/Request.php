@@ -12,7 +12,7 @@ class Request extends Message implements RequestContract, ServerRequestInterface
     /**
      * @var ServerRequestInterface
      */
-    private $wrapped;
+    protected $wrapped;
 
     /**
      * Psr7Request constructor.
@@ -368,5 +368,13 @@ class Request extends Message implements RequestContract, ServerRequestInterface
     public function toPsr7() : ServerRequestInterface
     {
         return $this;
+    }
+
+    /**
+     * @return ServerRequestInterface
+     */
+    protected function getWrapped()
+    {
+        return $this->wrapped;
     }
 }

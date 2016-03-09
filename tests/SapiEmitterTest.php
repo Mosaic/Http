@@ -5,7 +5,7 @@ namespace Mosaic\Tests\Http;
 use Mosaic\Http\Emitters\SapiEmitter;
 use Mosaic\Http\Response;
 use Mosaic\Http\Tests\MocksTheStandardLibrary;
-use Mosaic\Tests\StdMocks;
+use Mosaic\Http\Tests\StdMocks;
 use PHPUnit_Framework_TestCase;
 
 class SapiEmitterTest extends PHPUnit_Framework_TestCase

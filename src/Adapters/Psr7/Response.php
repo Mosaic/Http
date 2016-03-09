@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 class Response extends Message implements ResponseContract, ResponseInterface
 {
     /**
-     * @var ServerRequestInterface
+     * @var ResponseInterface
      */
     protected $wrapped;
 
@@ -115,5 +115,13 @@ class Response extends Message implements ResponseContract, ResponseInterface
     public function toPsr7() : ResponseInterface
     {
         return $this;
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    protected function getWrapped()
+    {
+        return $this->wrapped;
     }
 }
