@@ -20,7 +20,7 @@ class ResponseFactory implements ResponseFactoryContract
      */
     public function html(string $content = null, int $status = 200, array $headers = []) : ResponseContract
     {
-        if (!$content) {
+        if ($content === null) {
             return $this->emptyResponse($status, $headers);
         }
 

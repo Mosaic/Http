@@ -8,6 +8,20 @@ use Psr\Http\Message\StreamInterface;
 abstract class Message implements MessageInterface
 {
     /**
+     * @var MessageInterface
+     */
+    protected $wrapped;
+
+    /**
+     * Message constructor.
+     * @param MessageInterface $wrapped
+     */
+    public function __construct(MessageInterface $wrapped)
+    {
+        $this->wrapped = $wrapped;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getProtocolVersion()
