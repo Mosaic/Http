@@ -2,6 +2,7 @@
 
 namespace Mosaic\Http;
 
+use InvalidArgumentException;
 use Mosaic\Http\Emitters\SapiEmitter;
 use Mosaic\Http\Server as ServerContract;
 
@@ -31,6 +32,10 @@ class WebServer implements ServerContract
      */
     public function serve(Request $request, callable $terminate = null)
     {
+        if (count($this->pipes) < 1) {
+            throw new InvalidArgumentException('No pipes were given to the web server. Response could not be served.');
+        }
+
         ob_start();
         $bufferLevel = ob_get_level();
 

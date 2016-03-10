@@ -1,16 +1,14 @@
 <?php
 
-namespace Mosaic\Tests\Http;
+namespace Mosaic\Http\Tests;
 
 use Mosaic\Http\Emitters\SapiEmitter;
 use Mosaic\Http\Response;
-use Mosaic\Http\Tests\MocksTheStandardLibrary;
-use Mosaic\Http\Tests\StdMocks;
 use PHPUnit_Framework_TestCase;
 
 class SapiEmitterTest extends PHPUnit_Framework_TestCase
 {
-    use MocksTheStandardLibrary;
+    use MocksSapiEmittingHelpers;
 
     /**
      * @var SapiEmitter
@@ -30,8 +28,8 @@ class SapiEmitterTest extends PHPUnit_Framework_TestCase
 
     public function test_it_emits_a_response_object_when_no_headers_were_sent()
     {
-        StdMocks::$sapi->shouldReceive('ob_end_flush')->never();
-        StdMocks::$sapi->shouldReceive('ob_get_level')->twice();
+        StdMock::$sapi->shouldReceive('ob_end_flush')->never();
+        StdMock::$sapi->shouldReceive('ob_get_level')->twice();
 
         $this
             ->withContentLength()
@@ -45,7 +43,7 @@ class SapiEmitterTest extends PHPUnit_Framework_TestCase
     public function test_it_fails_hard_if_headers_were_sent()
     {
         $this->setExpectedException(\RuntimeException::class);
-        StdMocks::$headersSent = true;
+        StdMock::$headersSent = true;
 
         $this->emitter->emit($this->response);
     }
@@ -87,8 +85,8 @@ class SapiEmitterTest extends PHPUnit_Framework_TestCase
 
     public function test_it_considers_the_max_buffer_level()
     {
-        StdMocks::$sapi->shouldReceive('ob_end_flush')->once();
-        StdMocks::$sapi->shouldReceive('ob_get_level')->times(2)->andReturnValues([4, 3]);
+        StdMock::$sapi->shouldReceive('ob_end_flush')->once();
+        StdMock::$sapi->shouldReceive('ob_get_level')->times(2)->andReturnValues([4, 3]);
 
         $this
             ->withContentLength()
@@ -101,8 +99,8 @@ class SapiEmitterTest extends PHPUnit_Framework_TestCase
 
     public function test_it_shouldnt_end_buffer_if_its_level_is_below_the_given_max()
     {
-        StdMocks::$sapi->shouldReceive('ob_end_flush')->never();
-        StdMocks::$sapi->shouldReceive('ob_get_level')->once()->andReturnValues([2]);
+        StdMock::$sapi->shouldReceive('ob_end_flush')->never();
+        StdMock::$sapi->shouldReceive('ob_get_level')->once()->andReturnValues([2]);
 
         $this
             ->withContentLength()
@@ -118,7 +116,7 @@ class SapiEmitterTest extends PHPUnit_Framework_TestCase
      */
     private function withStatus()
     {
-        StdMocks::$sapi->shouldReceive('header')->with('HTTP/7.0 999 Just Because.', true)->once();
+        StdMock::$sapi->shouldReceive('header')->with('HTTP/7.0 999 Just Because.', true)->once();
 
         $this->response->shouldReceive('reason')->once()->andReturn('Just Because.');
         $this->response->shouldReceive('protocol')->once()->andReturn('7.0');
@@ -191,9 +189,9 @@ class SapiEmitterTest extends PHPUnit_Framework_TestCase
             'accept'       => ['the-truth', 'is-a-band'],
         ]);
 
-        StdMocks::$sapi->shouldReceive('header')->with('Content-Type: application/awesome', true)->once();
-        StdMocks::$sapi->shouldReceive('header')->with('Accept: the-truth', true)->once();
-        StdMocks::$sapi->shouldReceive('header')->with('Accept: is-a-band', false)->once();
+        StdMock::$sapi->shouldReceive('header')->with('Content-Type: application/awesome', true)->once();
+        StdMock::$sapi->shouldReceive('header')->with('Accept: the-truth', true)->once();
+        StdMock::$sapi->shouldReceive('header')->with('Accept: is-a-band', false)->once();
 
         return $this;
     }

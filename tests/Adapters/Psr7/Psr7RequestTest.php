@@ -404,8 +404,8 @@ class Psr7RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['foo' => 'bar'], $this->request->only('foo'));
     }
 
-    public function test_when_obtaining_only_some_parameters_from_the_request_they_are_returned_back_as_null_if_they_dont_exist()
-    {
+    public function test_when_obtaining_only_some_parameters_from_the_request_they_are_returned_back_as_null_if_they_dont_exist(
+    ) {
         $this->wrappedMock->shouldReceive('getMethod')->times(3)->andReturn('GET');
         $this->wrappedMock->shouldReceive('getQueryParams')->times(3)->andReturn([
             'foo' => 'bar',
@@ -567,8 +567,8 @@ class Psr7RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->request->has(['foo', 'bar', 'baz']));
     }
 
-    public function test_can_check_if_it_doesnt_have_a_non_empty_set_of_parameters_including_a_possible_array_parameter()
-    {
+    public function test_can_check_if_it_doesnt_have_a_non_empty_set_of_parameters_including_a_possible_array_parameter(
+    ) {
         $this->wrappedMock->shouldReceive('getMethod')->times(3)->andReturn('GET');
         $this->wrappedMock->shouldReceive('getQueryParams')->times(3)->andReturn([
             'foo' => 'bar',
@@ -580,8 +580,8 @@ class Psr7RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->request->has(['foo', 'bar', 'baz']));
     }
 
-    public function test_can_check_if_it_doesnt_have_a_non_empty_set_of_parameters_including_a_possible_empty_array_parameter()
-    {
+    public function test_can_check_if_it_doesnt_have_a_non_empty_set_of_parameters_including_a_possible_empty_array_parameter(
+    ) {
         $this->wrappedMock->shouldReceive('getMethod')->twice()->andReturn('GET');
         $this->wrappedMock->shouldReceive('getQueryParams')->twice()->andReturn([
             'foo' => 'bar',
@@ -800,6 +800,11 @@ class Psr7RequestTest extends \PHPUnit_Framework_TestCase
         $this->wrappedMock->shouldReceive('getCookieParams')->andReturn(['name' => 'params']);
 
         $this->assertEquals('default', $this->request->cookie('missing', 'default'));
+    }
+
+    public function test_can_get_psr7_compatible_request()
+    {
+        $this->assertInstanceOf(ServerRequestInterface::class, $this->request->toPsr7());
     }
 
     public function tearDown()
