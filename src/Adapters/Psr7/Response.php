@@ -17,7 +17,7 @@ class Response extends Message implements ResponseContract, ResponseInterface
      */
     public function __construct(ResponseInterface $wrapper)
     {
-        $this->wrapped = $wrapper;
+        parent::__construct($wrapper);
     }
 
     /**

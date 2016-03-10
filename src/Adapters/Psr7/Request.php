@@ -15,13 +15,11 @@ class Request extends Message implements RequestContract, ServerRequestInterface
     protected $wrapped;
 
     /**
-     * Psr7Request constructor.
-     *
      * @param ServerRequestInterface $wrapper
      */
     public function __construct(ServerRequestInterface $wrapper)
     {
-        $this->wrapped = $wrapper;
+        parent::__construct($wrapper);
     }
 
     /**
