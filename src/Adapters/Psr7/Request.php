@@ -89,7 +89,7 @@ class Request extends Message implements RequestContract, ServerRequestInterface
      */
     public function exists($key)
     {
-        return array_reduce((array) $key, function ($carry, $item) use ($key) {
+        return array_reduce((array) $key, function ($carry, $item) {
             return $carry && array_key_exists($item, $this->all());
         }, true);
     }
@@ -99,7 +99,7 @@ class Request extends Message implements RequestContract, ServerRequestInterface
      */
     public function has($key)
     {
-        return array_reduce((array) $key, function ($carry, $item) use ($key) {
+        return array_reduce((array) $key, function ($carry, $item) {
             return $carry && !$this->isEmptyString($item);
         }, true);
     }

@@ -4,6 +4,7 @@ namespace Mosaic\Http\Providers;
 
 use Interop\Container\Definition\DefinitionProviderInterface;
 use Mosaic\Cement\Components\Definition;
+use Mosaic\Container\Container;
 use Mosaic\Http\Adapters\Psr7\Request;
 use Mosaic\Http\Adapters\Psr7\Response;
 use Mosaic\Http\Adapters\Psr7\ResponseFactory;
@@ -36,10 +37,10 @@ class DiactorosProvider implements DefinitionProviderInterface
             ResponseFactoryInterface::class => function () {
                 return new ResponseFactory;
             },
-            Psr7Request::class => function ($container) {
+            Psr7Request::class => function (Container $container) {
                 return $container->make(RequestInterface::class)->toPsr7();
             },
-            Psr7Response::class => function ($container) {
+            Psr7Response::class => function (Container $container) {
                 return $container->make(ResponseInterface::class)->toPsr7();
             }
         ];
