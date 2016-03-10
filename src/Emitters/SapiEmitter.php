@@ -24,7 +24,7 @@ class SapiEmitter implements Emitter
             // PSR-7 indicates int OR null for the stream size; for null values,
             // we will not auto-inject the Content-Length.
             if (null !== $response->size()) {
-                $response = $response->addHeader('Content-Length', (string)$response->size());
+                $response = $response->addHeader('Content-Length', (string) $response->size());
             }
         }
 

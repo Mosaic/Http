@@ -33,15 +33,15 @@ interface Response
     public function size();
 
     /**
-     * @param string $string
-     * @param string $param
+     * @param string $header
+     * @param string $value
      *
      * @return static
      */
     public function addHeader(string $header, string $value);
 
     /**
-     * @param string $string
+     * @param string $name
      *
      * @return bool
      */
