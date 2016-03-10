@@ -1,14 +1,16 @@
 <?php
 
-namespace Mosaic\Http\Tests\Definitions;
+namespace Mosaic\Http\Tests\Providers;
 
 use Interop\Container\Definition\DefinitionProviderInterface;
 use Mosaic\Http\Providers\DiactorosProvider;
 use Mosaic\Http\Request;
 use Mosaic\Http\Response;
 use Mosaic\Http\ResponseFactory;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
-class DiactorosDefinitionTest extends \PHPUnit_Framework_TestCase
+class DiactorosProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function getDefinition() : DefinitionProviderInterface
     {
@@ -20,7 +22,9 @@ class DiactorosDefinitionTest extends \PHPUnit_Framework_TestCase
         return [
             Request::class,
             Response::class,
-            ResponseFactory::class
+            ResponseFactory::class,
+            ServerRequestInterface::class,
+            ResponseInterface::class
         ];
     }
 
