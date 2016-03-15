@@ -11,6 +11,12 @@ interface Server
     public function pipe(...$pipes);
 
     /**
+     * @param  callable $resolver
+     * @return Server
+     */
+    public function setResolver(callable $resolver);
+
+    /**
      * @param Request       $request
      * @param callable|null $terminate
      */

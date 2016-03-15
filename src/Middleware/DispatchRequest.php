@@ -3,9 +3,10 @@
 namespace Mosaic\Http\Middleware;
 
 use Mosaic\Http\Adapters\Psr7\Response;
-use Mosaic\Http\Request;
 use Mosaic\Http\ResponseFactory;
 use Mosaic\Routing\RouteDispatcher;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class DispatchRequest
 {
@@ -20,8 +21,6 @@ class DispatchRequest
     private $dispatcher;
 
     /**
-     * DispatchRequest constructor.
-     *
      * @param RouteDispatcher $dispatcher
      * @param ResponseFactory $factory
      */
@@ -34,16 +33,15 @@ class DispatchRequest
     }
 
     /**
-     * Dispatch the request
-     *
-     * @param Request $request
-     *
+     * @param  RequestInterface  $request
+     * @param  ResponseInterface $response
+     * @param  callable          $next
      * @return Response
      */
-    public function __invoke(Request $request)
+    public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null)
     {
         return $this->factory->make(
-            $this->dispatcher->dispatch($request->toPsr7())
+            $this->dispatcher->dispatch($request)
         );
     }
 }

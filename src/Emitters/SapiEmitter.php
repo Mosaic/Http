@@ -3,18 +3,18 @@
 namespace Mosaic\Http\Emitters;
 
 use Mosaic\Http\Emitter;
-use Mosaic\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
 class SapiEmitter implements Emitter
 {
     /**
-     * @param Response $response
-     * @param null     $maxBufferLevel
+     * @param ResponseInterface $response
+     * @param null              $maxBufferLevel
      *
      * @throws RuntimeException
      */
-    public function emit(Response $response, $maxBufferLevel = null)
+    public function emit(ResponseInterface $response, $maxBufferLevel = null)
     {
         if (headers_sent()) {
             throw new RuntimeException('Unable to emit response. Headers were already sent');
@@ -36,7 +36,7 @@ class SapiEmitter implements Emitter
     /**
      * @param Response $response
      */
-    private function emitStatus(Response $response)
+    private function emitStatus(ResponseInterface $response)
     {
         $reasonPhrase = $response->reason();
 
@@ -49,9 +49,9 @@ class SapiEmitter implements Emitter
     }
 
     /**
-     * @param Response $response
+     * @param ResponseInterface $response
      */
-    private function emitHeaders(Response $response)
+    private function emitHeaders(ResponseInterface $response)
     {
         foreach ($response->headers() as $header => $values) {
             $name  = $this->filterHeader($header);
@@ -68,10 +68,10 @@ class SapiEmitter implements Emitter
     }
 
     /**
-     * @param Response $response
-     * @param          $maxBufferLevel
+     * @param ResponseInterface $response
+     * @param                   $maxBufferLevel
      */
-    private function emitBody(Response $response, $maxBufferLevel)
+    private function emitBody(ResponseInterface $response, $maxBufferLevel)
     {
         if (null === $maxBufferLevel) {
             $maxBufferLevel = ob_get_level();

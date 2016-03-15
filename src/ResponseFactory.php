@@ -13,7 +13,7 @@ interface ResponseFactory
      *
      * @return Response
      */
-    public function html(string $content = null, int $status = 200, array $headers = []) : Response;
+    public function html(string $content = null, int $status = 200, array $headers = []);
 
     /**
      * @param mixed $content
@@ -23,7 +23,7 @@ interface ResponseFactory
      *
      * @return Response
      */
-    public function make($content = '', int $status = 200, array $headers = [])  : Response;
+    public function make($content = '', int $status = 200, array $headers = []);
 
     /**
      * @param array|Arrayable $content
@@ -33,5 +33,5 @@ interface ResponseFactory
      *
      * @return Response
      */
-    public function json($content = [], int $status = 200, array $headers = [], int $option = 79) : Response;
+    public function json($content = [], int $status = 200, array $headers = [], int $option = 79);
 }

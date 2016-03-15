@@ -5,6 +5,8 @@ namespace Mosaic\Http;
 use InvalidArgumentException;
 use Mosaic\Http\Emitters\SapiEmitter;
 use Mosaic\Http\Server as ServerContract;
+use Psr\Http\Message\ResponseInterface;
+use Relay\RelayBuilder;
 
 class WebServer implements ServerContract
 {
@@ -19,11 +21,20 @@ class WebServer implements ServerContract
     protected $emitter;
 
     /**
+     * @var callable
+     */
+    protected $resolver;
+
+    /**
      * @param Emitter $emitter
      */
     public function __construct(Emitter $emitter = null)
     {
         $this->emitter = $emitter ?: new SapiEmitter;
+
+        $this->setResolver(function ($class) {
+            return new $class;
+        });
     }
 
     /**
@@ -39,17 +50,29 @@ class WebServer implements ServerContract
         ob_start();
         $bufferLevel = ob_get_level();
 
-        $response = array_reduce(array_reverse($this->pipes), function ($next, $pipe) use ($request) {
-            return $pipe($request, function () use ($next) {
-                return $next;
-            });
-        });
+        $response = $this->relay($request);
 
         if (is_callable($terminate)) {
-            $terminate($request, $response);
+            $terminate($request->toPsr7(), $response);
         }
 
         $this->getEmitter()->emit($response, $bufferLevel);
+    }
+
+    /**
+     * @param  Request           $request
+     * @return ResponseInterface
+     */
+    protected function relay(Request $request)
+    {
+        $relay = (new RelayBuilder($this->resolver))->newInstance($this->pipes);
+
+        $response = $relay(
+            $request->toPsr7(),
+            $request->prepareResponse()->toPsr7()
+        );
+
+        return $response;
     }
 
     /**
@@ -69,5 +92,16 @@ class WebServer implements ServerContract
     protected function getEmitter() : Emitter
     {
         return $this->emitter;
+    }
+
+    /**
+     * @param  callable $resolver
+     * @return Server
+     */
+    public function setResolver(callable $resolver)
+    {
+        $this->resolver = $resolver;
+
+        return $this;
     }
 }

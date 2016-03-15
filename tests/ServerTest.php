@@ -5,12 +5,14 @@ namespace Mosaic\Http\Tests;
 use InvalidArgumentException;
 use Mockery\Mock;
 use Mosaic\Http\Emitter;
-use Mosaic\Http\Middleware\DispatchRequest;
 use Mosaic\Http\Request;
 use Mosaic\Http\Response;
 use Mosaic\Http\Server;
 use Mosaic\Http\WebServer;
 use PHPUnit_Framework_TestCase;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class ServerTest extends PHPUnit_Framework_TestCase
 {
@@ -31,9 +33,32 @@ class ServerTest extends PHPUnit_Framework_TestCase
      */
     private $emitter;
 
+    /**
+     * @var Mock
+     */
+    private $psr7;
+
+    /**
+     * @var Mock
+     */
+    private $psr7Response;
+
+    /**
+     * @var Mock
+     */
+    private $response;
+
     protected function setUp()
     {
-        $this->request = \Mockery::mock(Request::class);
+        $this->request      = \Mockery::mock(Request::class);
+        $this->psr7         = \Mockery::mock(ServerRequestInterface::class);
+        $this->psr7Response = \Mockery::mock(ResponseInterface::class);
+        $this->response     = \Mockery::mock(Response::class);
+
+        $this->request->shouldReceive('toPsr7')->andReturn($this->psr7);
+        $this->request->shouldReceive('prepareResponse')->andReturn($this->response);
+        $this->response->shouldReceive('toPsr7')->andReturn($this->psr7Response);
+
         $this->emitter = \Mockery::mock(Emitter::class);
 
         $this->server = new WebServer($this->emitter);
@@ -59,12 +84,13 @@ class ServerTest extends PHPUnit_Framework_TestCase
         StdMock::$sapi->shouldReceive('ob_start')->once();
 
         $this->server->pipe(
-            $pipe = \Mockery::mock(DispatchRequest::class)
+            PipeStub::class
         );
 
-        $pipe->shouldReceive('__invoke')->once()->andReturn($response = \Mockery::mock(Response::class));
+        $this->psr7Response->shouldReceive('withStatus')
+                           ->with(200)->andReturn($this->psr7Response)->once();
 
-        $this->emitter->shouldReceive('emit')->with($response, 1)->once();
+        $this->emitter->shouldReceive('emit')->with($this->psr7Response, 1)->once();
 
         $this->server->serve($this->request);
     }
@@ -74,16 +100,17 @@ class ServerTest extends PHPUnit_Framework_TestCase
         StdMock::$sapi->shouldReceive('ob_start')->once();
 
         $this->server->pipe(
-            $pipe = \Mockery::mock(DispatchRequest::class)
+            PipeStub::class
         );
 
-        $pipe->shouldReceive('__invoke')->once()->andReturn($response = \Mockery::mock(Response::class));
+        $this->psr7Response->shouldReceive('withStatus')
+                           ->with(200)->andReturn($this->psr7Response)->once();
 
-        $this->emitter->shouldReceive('emit')->with($response, 1)->once();
+        $this->emitter->shouldReceive('emit')->with($this->psr7Response, 1)->once();
 
         $this->server->serve($this->request, function ($request, $response) {
-            $this->assertInstanceOf(Request::class, $request);
-            $this->assertInstanceOf(Response::class, $response);
+            $this->assertInstanceOf(RequestInterface::class, $request);
+            $this->assertInstanceOf(ResponseInterface::class, $response);
         });
     }
 
@@ -92,16 +119,17 @@ class ServerTest extends PHPUnit_Framework_TestCase
         StdMock::$sapi->shouldReceive('ob_start')->once();
 
         $this->server->pipe(
-            new PipeStub(),
-            $pipe = \Mockery::mock(DispatchRequest::class)
+            ExtraPipeStub::class,
+            PipeStub::class
         );
 
-        $pipe->shouldReceive('__invoke')->once()->andReturn($response = \Mockery::mock(Response::class));
+        $this->psr7Response->shouldReceive('withStatus')
+                           ->with(200)->andReturn($this->psr7Response)->once();
 
-        // Make sure both pipes are called
-        $response->shouldReceive('withStatus')->with(200)->andReturn($response);
+        $this->psr7Response->shouldReceive('withStatus')
+                           ->with(304)->andReturn($this->psr7Response)->once();
 
-        $this->emitter->shouldReceive('emit')->with($response, 1)->once();
+        $this->emitter->shouldReceive('emit')->with($this->psr7Response, 1)->once();
 
         $this->server->serve($this->request);
     }
@@ -109,10 +137,20 @@ class ServerTest extends PHPUnit_Framework_TestCase
 
 class PipeStub
 {
-    public function __invoke($request, callable $next)
+    public function __invoke($request, $response, callable $next)
     {
-        $response = $next($request);
+        $response = $next($request, $response);
 
         return $response->withStatus(200);
+    }
+}
+
+class ExtraPipeStub
+{
+    public function __invoke($request, $response, callable $next)
+    {
+        $response = $next($request, $response);
+
+        return $response->withStatus(304);
     }
 }

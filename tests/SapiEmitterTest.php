@@ -3,8 +3,8 @@
 namespace Mosaic\Http\Tests;
 
 use Mosaic\Http\Emitters\SapiEmitter;
-use Mosaic\Http\Response;
 use PHPUnit_Framework_TestCase;
+use Psr\Http\Message\ResponseInterface;
 
 class SapiEmitterTest extends PHPUnit_Framework_TestCase
 {
@@ -23,7 +23,7 @@ class SapiEmitterTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->emitter  = new SapiEmitter();
-        $this->response = \Mockery::mock(Response::class);
+        $this->response = \Mockery::mock(ResponseInterface::class);
     }
 
     public function test_it_emits_a_response_object_when_no_headers_were_sent()

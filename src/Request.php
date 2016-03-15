@@ -12,6 +12,11 @@ interface Request
     public function toPsr7() : ServerRequestInterface;
 
     /**
+     * @return Response
+     */
+    public function prepareResponse() : Response;
+
+    /**
      * Retrieve a header from the request.
      *
      * @param string $key

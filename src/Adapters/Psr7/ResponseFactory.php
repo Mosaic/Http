@@ -18,7 +18,7 @@ class ResponseFactory implements ResponseFactoryContract
      *
      * @return ResponseContract
      */
-    public function html(string $content = null, int $status = 200, array $headers = []) : ResponseContract
+    public function html(string $content = null, int $status = 200, array $headers = [])
     {
         if ($content === null || $content == '') {
             return $this->emptyResponse($status, $headers);
@@ -36,10 +36,10 @@ class ResponseFactory implements ResponseFactoryContract
      *
      * @return ResponseContract
      */
-    public function make($content = '', int $status = 200, array $headers = [])  : ResponseContract
+    public function make($content = '', int $status = 200, array $headers = [])
     {
         if ($content instanceof ResponseContract) {
-            return $content;
+            return $content->toPsr7();
         }
 
         if (is_array($content) || $content instanceof Arrayable) {
@@ -57,7 +57,7 @@ class ResponseFactory implements ResponseFactoryContract
      *
      * @return ResponseContract
      */
-    public function json($content = [], int $status = 200, array $headers = [], int $option = 79) : ResponseContract
+    public function json($content = [], int $status = 200, array $headers = [], int $option = 79)
     {
         if ($content instanceof Arrayable) {
             $content = $content->toArray();
@@ -74,7 +74,7 @@ class ResponseFactory implements ResponseFactoryContract
      *
      * @return ResponseContract
      */
-    private function emptyResponse(int $status = 200, array $headers = []) : ResponseContract
+    private function emptyResponse(int $status = 200, array $headers = [])
     {
         return new Response(
             new EmptyResponse($status, $headers)

@@ -2,11 +2,13 @@
 
 namespace Mosaic\Http;
 
+use Psr\Http\Message\ResponseInterface;
+
 interface Emitter
 {
     /**
-     * @param Response $response
-     * @param null     $maxBufferLevel
+     * @param ResponseInterface $response
+     * @param null              $maxBufferLevel
      */
-    public function emit(Response $response, $maxBufferLevel = null);
+    public function emit(ResponseInterface $response, $maxBufferLevel = null);
 }

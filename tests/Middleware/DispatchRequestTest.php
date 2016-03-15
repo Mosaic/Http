@@ -9,6 +9,7 @@ use Mosaic\Http\Response;
 use Mosaic\Http\ResponseFactory;
 use Mosaic\Routing\RouteDispatcher;
 use PHPUnit_Framework_TestCase;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class DispatchRequestTest extends PHPUnit_Framework_TestCase
@@ -42,8 +43,8 @@ class DispatchRequestTest extends PHPUnit_Framework_TestCase
     {
         $this->dispatcher = \Mockery::mock(RouteDispatcher::class);
         $this->factory    = \Mockery::mock(ResponseFactory::class);
-        $this->request    = \Mockery::mock(Request::class);
-        $this->response   = \Mockery::mock(Response::class);
+        $this->request    = \Mockery::mock(ServerRequestInterface::class);
+        $this->response   = \Mockery::mock(ResponseInterface::class);
 
         $this->middleware = new DispatchRequest(
             $this->dispatcher,
@@ -55,11 +56,10 @@ class DispatchRequestTest extends PHPUnit_Framework_TestCase
     {
         $middleware = $this->middleware;
 
-        $this->request->shouldReceive('toPsr7')->once()->andReturn($psr7 = \Mockery::mock(ServerRequestInterface::class));
-        $this->dispatcher->shouldReceive('dispatch')->with($psr7)->andReturn('response');
+        $this->dispatcher->shouldReceive('dispatch')->with($this->request)->andReturn('response');
         $this->factory->shouldReceive('make')->with('response')->andReturn($this->response);
 
-        $this->assertEquals($this->response, $middleware($this->request));
+        $this->assertEquals($this->response, $middleware($this->request, $this->response));
     }
 
     public function tearDown()

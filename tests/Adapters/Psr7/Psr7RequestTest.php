@@ -4,6 +4,7 @@ namespace Mosaic\Http\Tests\Adapters\Psr7;
 
 use Mosaic\Http\Adapters\Psr7\Request;
 use Mosaic\Http\Request as RequestContract;
+use Mosaic\Http\Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
@@ -805,6 +806,13 @@ class Psr7RequestTest extends \PHPUnit_Framework_TestCase
     public function test_can_get_psr7_compatible_request()
     {
         $this->assertInstanceOf(ServerRequestInterface::class, $this->request->toPsr7());
+    }
+
+    public function test_can_prepare_a_response()
+    {
+        $response = $this->request->prepareResponse();
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertInstanceOf(\Mosaic\Http\Adapters\Psr7\Response::class, $response);
     }
 
     public function tearDown()
