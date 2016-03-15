@@ -3,6 +3,7 @@
 namespace Mosaic\Http;
 
 use Mosaic\Common\Arrayable;
+use Psr\Http\Message\ResponseInterface;
 
 interface ResponseFactory
 {
@@ -11,7 +12,7 @@ interface ResponseFactory
      * @param int    $status
      * @param array  $headers
      *
-     * @return Response
+     * @return ResponseInterface
      */
     public function html(string $content = null, int $status = 200, array $headers = []);
 
@@ -21,7 +22,7 @@ interface ResponseFactory
      * @param int   $status
      * @param array $headers
      *
-     * @return Response
+     * @return ResponseInterface
      */
     public function make($content = '', int $status = 200, array $headers = []);
 
@@ -31,7 +32,7 @@ interface ResponseFactory
      * @param array           $headers
      * @param int             $option
      *
-     * @return Response
+     * @return ResponseInterface
      */
     public function json($content = [], int $status = 200, array $headers = [], int $option = 79);
 }

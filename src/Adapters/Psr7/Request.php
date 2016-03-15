@@ -5,7 +5,7 @@ namespace Mosaic\Http\Adapters\Psr7;
 use Mosaic\Common\Arr;
 use Mosaic\Http\Adapters\Psr7\Response as ResponseAdapter;
 use Mosaic\Http\Request as RequestContract;
-use Mosaic\Http\Response;
+use Mosaic\Http\Response as ResponseContract;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Zend\Diactoros\Response as DiactorosResponse;
@@ -372,9 +372,9 @@ class Request extends Message implements RequestContract, ServerRequestInterface
     }
 
     /**
-     * @return Response
+     * @return ResponseContract
      */
-    public function prepareResponse() : Response
+    public function prepareResponse() : ResponseContract
     {
         return new ResponseAdapter(
             new DiactorosResponse()
